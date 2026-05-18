@@ -6,7 +6,8 @@ import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { listTenants } from "@/lib/hamrorent.functions";
-import { Plus } from "lucide-react";
+import { Plus, Copy } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/tenants")({
   head: () => ({ meta: [{ title: "Tenants — HamroRent" }] }),
@@ -47,6 +48,11 @@ function TenantsPage() {
 }
 
 function TenantList({ list, loading, emptyText }: { list: any[]; loading: boolean; emptyText: string }) {
+  const handleCopyToken = (token: string) => {
+    navigator.clipboard.writeText(token);
+    toast.success("Share token copied");
+  };
+
   if (loading) return <p className="text-muted-foreground">Loading…</p>;
   if (list.length === 0) return <p className="rounded-xl border border-dashed border-border bg-card p-10 text-center text-muted-foreground">{emptyText}</p>;
   return (
@@ -58,6 +64,7 @@ function TenantList({ list, loading, emptyText }: { list: any[]; loading: boolea
             <th className="px-4 py-3">Room</th>
             <th className="px-4 py-3">Phone</th>
             <th className="px-4 py-3">Move-in (BS)</th>
+            <th className="px-4 py-3">Share Token</th>
             <th className="px-4 py-3"></th>
           </tr>
         </thead>
@@ -68,6 +75,21 @@ function TenantList({ list, loading, emptyText }: { list: any[]; loading: boolea
               <td className="px-4 py-3 text-muted-foreground">{t.room_number ?? "—"}</td>
               <td className="px-4 py-3 text-muted-foreground">{t.phone ?? "—"}</td>
               <td className="px-4 py-3 text-muted-foreground">{t.move_in_date_bs ?? "—"}</td>
+              <td className="px-4 py-3">
+                {t.share_token ? (
+                  <div className="flex items-center gap-2">
+                    <code className="rounded bg-muted px-2 py-1 text-xs font-mono">{t.share_token.substring(0, 8)}…</code>
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      onClick={() => handleCopyToken(t.share_token)}
+                      title={t.share_token}
+                    >
+                      <Copy className="size-3.5" />
+                    </Button>
+                  </div>
+                ) : "—"}
+              </td>
               <td className="px-4 py-3 text-right">
                 <Button size="sm" variant="ghost" asChild>
                   <Link to="/tenants/$tenantId" params={{ tenantId: t.id }}>Open</Link>
