@@ -49,10 +49,13 @@ function NewTenantPage() {
     if (!form.name.trim()) return toast.error("Name is required");
     setLoading(true);
     try {
-      const t = await save({ data: form } as any);
+      console.log("[v0] Submitting form:", form);
+      const t = await save(form);
+      console.log("[v0] Tenant created:", t);
       toast.success("Tenant added");
       router.navigate({ to: "/tenants/$tenantId", params: { tenantId: (t as any).id } });
     } catch (err: any) {
+      console.log("[v0] Error saving tenant:", err);
       toast.error(err.message ?? "Failed to save");
     } finally {
       setLoading(false);
