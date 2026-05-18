@@ -34,6 +34,7 @@ const tenantInput = z.object({
   move_in_date_bs: z.string().max(40).nullish(),
   notes: z.string().max(2000).nullish(),
   is_active: z.boolean().optional(),
+  share_token: z.string().max(100).nullish(),
 });
 
 export const saveTenant = createServerFn({ method: "POST" })
