@@ -18,6 +18,7 @@ CREATE TABLE public.tenants (
   move_in_date_bs TEXT,
   notes TEXT,
   is_active BOOLEAN NOT NULL DEFAULT true,
+  share_token TEXT UNIQUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
